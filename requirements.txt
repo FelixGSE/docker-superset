@@ -1,0 +1,8 @@
+apache-superset
+redis
+mysqlclient
+psycopg2
+pyhive
+pydruid
+gsheetsdb
+gunicorn[gevent,setproctitle]

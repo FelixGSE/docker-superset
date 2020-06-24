@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:3.2
+    container_name: superset_cache
+    restart: unless-stopped
+    volumes:
+      - ./redis-data:/data    
+    ports:
+      - "6379:6379"
+  postgres_superset:
+    image: postgres:10
+    container_name: postgres_superset
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=postgres_superset
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=superset
+      - POSTGRES_PASSWORD=superset
+      - POSTGRES_DB=superset
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data      
+    ports:
+      - "5432:5432"
+  superset:
+    image: superset:local
+    command: superset
+    container_name: superset
+    restart: unless-stopped
+    environment: 
+      - WAIT_FOR_SVC_POSTGRES=postgres_superset:5432
+    ports:
+      - 8088:8088
+    depends_on: 
+      - postgres_superset
